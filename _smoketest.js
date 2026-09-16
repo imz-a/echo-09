@@ -144,6 +144,8 @@ const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t 
   check(/--blue\s*:\s*#0a6cff/.test(css) && /wallpaper\.jpg/.test(css), '拟真系统蓝色配色 + 照片壁纸生效');
   check(/blog-cover\.jpg/.test(css), '博客封面照片接入样式');
   check(/linear-gradient\(180deg,#54a9ff/.test(css) || /app-tile/.test(css), '彩色应用图标（Aqua 瓷砖）生效');
+  check(/\.win-dots i::before\s*\{[^}]*width:\s*30px[^}]*height:\s*30px/.test(css), '窗口按钮热区已扩大到 30px（小圆点大点击区）');
+  check(/\.win-dots i:hover::after/.test(css), '悬停圆点即显示 ✕ − + 图标');
 
   console.log('\n[9b] 真实图片接入（用户要求"搜图放进去"）');
   ev('openApp("drive")'); await sleep(250);
@@ -152,6 +154,30 @@ const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t 
   check(!!Q('.app-drive img[src*="mochi.jpg"]'), '网盘 mochi.jpg 真实猫图已渲染（替换原 SVG 占位）');
   ev('Apps.blog.render(WM.open["blog"])'); await sleep(250);
   check(!!Q('.app-blog .bl-head.has-cover'), '博客首页头部使用 has-cover（真实封面照片）');
+
+  console.log('\n[9c] 窗口按钮（左上角三颗灯）可点性');
+  // 打开一个干净窗口，逐个点击三颗灯，验证放大后的热区确实生效
+  ev('openApp("search")'); await sleep(250);
+  const _w = ev('WM.open["search"]');
+  const dots = QA('.app-search .win-dots i');
+  check(dots.length === 3, '窗口左上角有 3 个按钮（关闭/最小化/最大化）');
+  check(dots.every(d => d.getAttribute('aria-label')), '三个按钮都有无障碍标签');
+  const rDot = dots.find(d => d.dataset.act === 'close');
+  const yDot = dots.find(d => d.dataset.act === 'min');
+  const gDot = dots.find(d => d.dataset.act === 'max');
+  click(gDot); await sleep(150);
+  check(ev('WM.open["search"].dataset.max') === '1', '点击"最大化"生效');
+  click(gDot); await sleep(150);
+  check(ev('WM.open["search"].dataset.max') === '0', '再次点击还原窗口尺寸');
+  click(yDot); await sleep(200);
+  check(ev('WM.open["search"].classList.contains("min")'), '点击"最小化"收起窗口');
+  ev('focusWin("search"); WM.open["search"].classList.remove("min")'); await sleep(120);
+  click(rDot); await sleep(200);
+  check(!ev('!!WM.open["search"]'), '点击"关闭"回收窗口');
+  // 关键：点击圆点内的伪元素区域（实际命中 <i> 本身）不应报错且能关闭
+  ev('openApp("notes")'); await sleep(200);
+  click(QA('.app-notes .win-dots i')[0]); await sleep(200);
+  check(!ev('!!WM.open["notes"]'), '点击热区（含内边距）同样可关闭窗口');
 
   console.log('\n[10] 运行时错误');
   const real = errors.filter(e => !/Could not parse CSS|Not implemented|AudioContext|css/i.test(e));

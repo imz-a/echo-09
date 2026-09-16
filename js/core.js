@@ -175,7 +175,11 @@ function openApp(id, params){
 
   w.innerHTML =
     '<div class="win-bar">' +
-      '<div class="win-dots"><i class="r" data-act="close"></i><i class="y" data-act="min"></i><i class="g" data-act="max"></i></div>' +
+      '<div class="win-dots">' +
+        '<i class="r" data-act="close" role="button" aria-label="关闭" title="关闭"></i>' +
+        '<i class="y" data-act="min" role="button" aria-label="最小化" title="最小化"></i>' +
+        '<i class="g" data-act="max" role="button" aria-label="最大化" title="最大化"></i>' +
+      '</div>' +
       '<div class="win-title">' + appIcon(meta.icon, 16) + '<span>' + esc(meta.name) + '</span></div>' +
     '</div>' +
     '<div class="win-body"></div>';
@@ -185,7 +189,8 @@ function openApp(id, params){
 
   // 事件
   $('.win-dots', w).addEventListener('click', e => {
-    const a = e.target.dataset.act;
+    const dot = e.target.closest ? e.target.closest('[data-act]') : e.target;
+    const a = dot && dot.dataset ? dot.dataset.act : null;
     if (a === 'close') closeWin(id);
     if (a === 'min'){ w.classList.add('min'); sfx.click(); buildDock(); }
     if (a === 'max'){

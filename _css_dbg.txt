@@ -1,0 +1,9 @@
+sheets=1
+FOUND=true
+,.22); }
+.win-dots i::before { content: ""; position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; transform: translate(-50%,-50%); }
+.win-dots i:hover { filter: brightness(1.08); }
+.win-dots .r { background: rgb(255, 95, 87); }
+.win-dots .y { background: rgb(254, 188, 46); }
+.win-dots .g { background: rgb(40, 200, 64); }
+.win-dots i::after { font: 600 9px/1 var(--sans); color: rgba(0, 0, 0, 0.

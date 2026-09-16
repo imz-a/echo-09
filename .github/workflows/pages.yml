@@ -26,12 +26,21 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # 仓库尚未开启 Pages 时自动开启（否则首次部署会因 "Get Pages site failed" 失败）
+          enablement: true
+
+      - name: Prepare site
+        # 只发布游戏本体，排除 tests/ 与仓库元文件
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r css js assets _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 只发布游戏本体，不带测试脚本
-          path: '.'
+          path: '_site'
 
       - name: Deploy
         id: deployment

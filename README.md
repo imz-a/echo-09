@@ -47,7 +47,7 @@ js/core.js          状态、存档、窗口管理、音效（WebAudio 实时合
 js/apps.js          各站点渲染器
 js/main.js          开机引导序列
 assets/img/         真实照片（壁纸 / 博客封面 / 猫）
-tests/              两个自测脚本（不属于游戏本体）
+tests/              自测与审计脚本（不属于游戏本体，部署时已排除）
 ```
 
 **兼容性**：所有资源引用均为相对路径，无 `fetch()` / XHR / ES Module / `file://` 依赖，因此可直接部署在 GitHub Pages 的**子路径**下（`用户名.github.io/仓库名/`）。
@@ -66,27 +66,39 @@ python -m http.server 8080
 
 ## 自测
 
+五套脚本，全部纯 Node、无需构建：
+
 ```bash
-# 数据完整性 + 密码链校验（纯 Node，无需依赖）
+# 1) 数据完整性 + 密码链（无需依赖）
 node tests/_selftest.js
 
-# 完整通关模拟 + 运行时错误捕获（需要 jsdom）
+# 2) 剧情链路审计：38 条线索的来源、解锁死锁、结局链路、提示覆盖
+node tests/_audit.js
+
+# 3) 叙事时间线一致性 + 数字交叉核对
+node tests/_timeline.js
+
+# 4) GitHub Pages 子路径资源检查（本地起 http server 校验全部引用）
+node tests/_pathcheck.js
+
+# 5) 完整通关模拟（需要 jsdom）
 npm i jsdom
 node tests/_smoketest.js
 ```
 
-`_smoketest.js` 会用 jsdom 真实执行一遍从开机到结局的完整流程，共 60+ 项断言，覆盖密码链、存档、图标、视觉层与窗口交互。
+`_smoketest.js` 用 jsdom 真实执行一遍从开机到结局的完整流程，共 60+ 项断言，覆盖密码链、存档、图标、视觉层、窗口交互，并在结尾检查无 JS 运行时错误。
 
 ## 部署到 GitHub Pages
 
-仓库已内置 GitHub Actions 工作流（`.github/workflows/pages.yml`），推送到 `main` 后自动部署。首次需手动开启一次：
+仓库已内置 GitHub Actions 工作流（`.github/workflows/pages.yml`），推送到 `main` 即自动部署，**首次会自动开启 Pages，无需手动设置**：
 
-1. 打开仓库 **Settings → Pages**
-2. **Source** 选 **GitHub Actions**（不要选 branch）
-3. 回到 **Actions** 页，等待 `Deploy to GitHub Pages` 跑完（约 1 分钟）
-4. 访问 `https://<用户名>.github.io/echo-09/`
+1. `git push origin main`
+2. 打开 **Actions** 页，等 `Deploy to GitHub Pages` 跑完（约 1 分钟）
+3. 访问 `https://<用户名>.github.io/echo-09/`
 
-> 也可以跳过后面的自动部署：把 **Source** 选 `Deploy from a branch` → `main` / `/ (root)`，同样可以。
+工作流只发布游戏本体（`index.html` + `css/` + `js/` + `assets/`），不含 `tests/`。
+
+> 也可以不用 Actions：仓库 **Settings → Pages** 里把 **Source** 选 `Deploy from a branch` → `main` / `/ (root)`。
 > 两种方式都行，因为站点是纯静态、且所有资源路径都是相对的。
 
 ---

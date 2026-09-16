@@ -1,11 +1,10 @@
 # 依赖（测试用，不随游戏发布）
 node_modules/
 
-# 临时脚本 / 调试产物
-_*.txt
-_*.log
-_smoke_fail.txt
-_probe.js
+# 临时脚本 / 调试产物（测试脚本 tests/_*.js 需要保留，故只忽略根目录下的 _*）
+/_*
+# 测试运行时产出的日志
+tests/_*.txt
 
 # 系统
 .DS_Store

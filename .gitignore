@@ -1,0 +1,12 @@
+# 依赖（测试用，不随游戏发布）
+node_modules/
+
+# 临时脚本 / 调试产物
+_*.txt
+_*.log
+_smoke_fail.txt
+_probe.js
+
+# 系统
+.DS_Store
+Thumbs.db

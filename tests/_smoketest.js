@@ -13,7 +13,7 @@ const check = (cond, name) => { _n++; console.log((cond ? '  ✔ ' : '  ✖ ') +
 const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t < (ms || 8000)){ if (fn()) return true; await sleep(120); } return false; };
 
 (async () => {
-  const dom = await JSDOM.fromFile(path.join(__dirname, 'index.html'), {
+  const dom = await JSDOM.fromFile(path.join(__dirname, '..', 'index.html'), {
     runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true, virtualConsole: vc
   });
   const win = dom.window, doc = win.document;

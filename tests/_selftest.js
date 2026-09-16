@@ -3,7 +3,7 @@ const fs = require('fs');
 const vm = require('vm');
 const path = require('path');
 
-const dir = __dirname;
+const dir = path.join(__dirname, '..');
 const ctx = {
   console,
   document: { querySelector: () => null, querySelectorAll: () => [], addEventListener(){}, createElement: () => ({ style:{}, classList:{add(){},remove(){}}, appendChild(){}, addEventListener(){} }) },

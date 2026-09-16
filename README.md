@@ -79,12 +79,15 @@ node tests/_smoketest.js
 
 ## 部署到 GitHub Pages
 
-仓库已包含可用的静态站点，直接开启即可：
+仓库已内置 GitHub Actions 工作流（`.github/workflows/pages.yml`），推送到 `main` 后自动部署。首次需手动开启一次：
 
 1. 打开仓库 **Settings → Pages**
-2. **Source** 选 `Deploy from a branch`
-3. **Branch** 选 `main`，目录选 `/ (root)`
-4. 保存，等待约 1 分钟，访问 `https://<用户名>.github.io/echo-09/`
+2. **Source** 选 **GitHub Actions**（不要选 branch）
+3. 回到 **Actions** 页，等待 `Deploy to GitHub Pages` 跑完（约 1 分钟）
+4. 访问 `https://<用户名>.github.io/echo-09/`
+
+> 也可以跳过后面的自动部署：把 **Source** 选 `Deploy from a branch` → `main` / `/ (root)`，同样可以。
+> 两种方式都行，因为站点是纯静态、且所有资源路径都是相对的。
 
 ---
 

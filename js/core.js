@@ -77,7 +77,7 @@ function addClue(id){
   if (!CLUES[id] || S.clues.includes(id)) return false;
   S.clues.push(id);
   const c = CLUES[id];
-  toast('📌 新线索：' + c.ti, 'good');
+  toast(c.ti, 'good', c.ic);
   beep(660, .07, 'sine'); setTimeout(() => beep(880, .09, 'sine'), 70);
   renderMenubar();
   if (S.clues.length >= TOTAL_CLUES) grantAch('all_clues');
@@ -89,7 +89,7 @@ function unlockApp(id){
   if (S.unlocked.includes(id)) return false;
   S.unlocked.push(id);
   const a = APPS.find(x => x.id === id);
-  toast('🌐 新站点已收录：' + (a ? a.name : id), 'good');
+  toast((a ? a.name : id) + ' 已收录', 'good', 'cloud');
   buildDock(); buildIcons();
   save();
   return true;
@@ -99,7 +99,7 @@ function grantAch(id){
   if (S.ach.includes(id)) return;
   S.ach.push(id);
   const a = ACHIEVEMENTS.find(x => x.id === id);
-  if (a) toast('🏆 成就解锁：' + a.ti, 'warn');
+  if (a) toast(a.ti, 'warn', a.ic);
   save();
 }
 
@@ -132,9 +132,9 @@ const sfx = {
 
 /* ---------------- Toast ---------------- */
 let toastTimer = null;
-function toast(msg, kind){
+function toast(msg, kind, ic){
   const t = $('#toast');
-  t.textContent = msg;
+  t.innerHTML = (ic ? icon(ic, 15) : '') + '<span>' + esc(msg) + '</span>';
   t.className = 'toast show ' + (kind || '');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.className = 'toast ' + (kind || ''); }, 2600);
@@ -176,7 +176,7 @@ function openApp(id, params){
   w.innerHTML =
     '<div class="win-bar">' +
       '<div class="win-dots"><i class="r" data-act="close"></i><i class="y" data-act="min"></i><i class="g" data-act="max"></i></div>' +
-      '<div class="win-title">' + esc(meta.name) + '</div>' +
+      '<div class="win-title">' + icon(meta.icon, 14) + '<span>' + esc(meta.name) + '</span></div>' +
     '</div>' +
     '<div class="win-body"></div>';
 
@@ -248,7 +248,7 @@ function buildDock(){
   d.innerHTML = list.map(a => {
     const isOpen = !!WM.open[a.id] && !WM.open[a.id].classList.contains('min');
     return '<div class="dock-btn ' + (isOpen ? 'active' : '') + '" data-app="' + a.id + '">' +
-             '<span>' + a.icon + '</span><span class="tip">' + esc(a.name) + '</span>' +
+             icon(a.icon, 22) + '<span class="tip">' + esc(a.name) + '</span>' +
            '</div>';
   }).join('<div class="dock-sep"></div>');
   $$('.dock-btn', d).forEach(b => b.onclick = () => {
@@ -262,18 +262,15 @@ function buildIcons(){
   const box = $('#deskIcons');
   box.innerHTML = APPS.filter(a => S.unlocked.includes(a.id)).map(a =>
     '<div class="desk-icon" data-app="' + a.id + '">' +
-      '<div class="ico">' + a.icon + '</div>' +
+      '<div class="ico">' + icon(a.icon, 22) + '</div>' +
       '<div class="lbl">' + esc(a.name) + '</div>' +
     '</div>').join('');
   $$('.desk-icon', box).forEach(el => el.onclick = () => openApp(el.dataset.app));
-  box.querySelectorAll('.desk-icon').forEach(el => {
-    el.ondblclick = () => openApp(el.dataset.app);
-  });
 }
 
 /* ---------------- 顶栏 ---------------- */
 function renderMenubar(){
-  const el = $('#mbClue');
+  const el = $('#mbClueTx') || $('#mbClue');
   if (el) el.textContent = '线索 ' + S.clues.length + '/' + TOTAL_CLUES;
 }
 function renderClock(){

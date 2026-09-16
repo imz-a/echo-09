@@ -121,7 +121,29 @@ const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t 
   check(ev('S.end') === 'publish', '结局写入存档');
   check(card.includes('调查耗时') && card.includes('成就'), '结算面板含耗时与成就');
 
-  console.log('\n[9] 运行时错误');
+  console.log('\n[9] 视觉层 · 图标与排版');
+  const allNames = ev(`(() => {
+    const names = [].concat(APPS.map(a => a.icon))
+      .concat(Object.keys(CLUES).map(k => CLUES[k].ic))
+      .concat(DRIVE.files.map(f => f.icon))
+      .concat(ACHIEVEMENTS.map(a => a.ic))
+      .concat(ENDING.choice.map(c => c.ic))
+      .concat([ENDING.sleep.glyph, ENDING.publish.glyph]);
+    return Array.from(new Set(names.filter(Boolean)));
+  })()`);
+  const missing = ev('(' + JSON.stringify(allNames) + ').filter(n => !ICONS[n])');
+  check(ev('Object.keys(ICONS).length') >= 45, '图标集共 ' + ev('Object.keys(ICONS).length') + ' 个线性图标');
+  check(missing.length === 0, '所有数据层图标名都能命中图标集' + (missing.length ? '：' + missing.join(',') : '（' + allNames.length + ' 个）'));
+  check(QA('svg.ic').length > 20, '页面已渲染 ' + QA('svg.ic').length + ' 个 SVG 图标');
+  check(QA('.menubar [data-ic]').every(el => el.querySelector('svg')), '顶栏占位图标已注入');
+  check(ev('typeof icon === "function" && typeof hydrateIcons === "function"'), '图标模块已加载');
+  const emo = (doc.body.textContent || '').match(/[\u{1F000}-\u{1FAFF}\u{FE0F}\u{200D}]/gu);
+  check(!emo, '界面文本无 emoji 残留' + (emo ? '：' + Array.from(new Set(emo)).join(' ') : ''));
+  const css = Array.from(doc.styleSheets).map(s => { try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(e){ return ''; } }).join('\n');
+  check(!/background-clip\s*:\s*text|-webkit-background-clip/.test(css), '已移除渐变裁剪文字');
+  check(/var\(--acc\)/.test(css) && /#d8a34a/.test(css), '暖墨 / 黄铜配色变量生效');
+
+  console.log('\n[10] 运行时错误');
   const real = errors.filter(e => !/Could not parse CSS|Not implemented|AudioContext|css/i.test(e));
   real.slice(0, 8).forEach(e => console.log('  ✖ ' + e));
   check(real.length === 0, '无 JS 运行时错误' + (errors.length > real.length ? '（忽略 ' + (errors.length - real.length) + ' 条 jsdom 环境噪音）' : ''));

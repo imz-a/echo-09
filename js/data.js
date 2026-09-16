@@ -4,15 +4,15 @@
    ============================================================ */
 
 const APPS = [
-  { id:'brief',   name:'委托信',    icon:'✉️', cls:'app-blog',  w:620,  h:520, x:60,  y:60,  home:true },
-  { id:'search',  name:'搜鸿搜索',  icon:'🔍', cls:'app-search', w:820,  h:640, x:140, y:40,  home:true },
-  { id:'notes',   name:'线索板',    icon:'📌', cls:'app-notes',  w:560,  h:620, x:560, y:80,  home:true },
-  { id:'term',    name:'终端',      icon:'⌨️', cls:'app-term',   w:640,  h:460, x:200, y:220, home:true },
-  { id:'forum',   name:'深蓝BBS',   icon:'💬', cls:'app-forum',  w:860,  h:640, x:100, y:50 },
-  { id:'drive',   name:'云雀网盘',  icon:'☁️', cls:'app-drive',  w:700,  h:560, x:300, y:90 },
-  { id:'blog',    name:'回声小站',  icon:'🌙', cls:'app-blog',   w:680,  h:620, x:380, y:60 },
-  { id:'mail',    name:'星尘邮箱',  icon:'📮', cls:'app-mail',   w:960,  h:620, x:80,  y:60 },
-  { id:'db',      name:'星尘内网',  icon:'🗄️', cls:'app-db',     w:820,  h:620, x:220, y:60 }
+  { id:'brief',   name:'委托信',    icon:'mailOpen', cls:'app-blog',  w:620,  h:520, x:60,  y:60,  home:true },
+  { id:'search',  name:'搜鸿搜索',  icon:'search', cls:'app-search', w:820,  h:640, x:140, y:40,  home:true },
+  { id:'notes',   name:'线索板',    icon:'pin', cls:'app-notes',  w:560,  h:620, x:560, y:80,  home:true },
+  { id:'term',    name:'终端',      icon:'terminal', cls:'app-term',   w:640,  h:460, x:200, y:220, home:true },
+  { id:'forum',   name:'深蓝BBS',   icon:'forum', cls:'app-forum',  w:860,  h:640, x:100, y:50 },
+  { id:'drive',   name:'云雀网盘',  icon:'cloud', cls:'app-drive',  w:700,  h:560, x:300, y:90 },
+  { id:'blog',    name:'回声小站',  icon:'moon', cls:'app-blog',   w:680,  h:620, x:380, y:60 },
+  { id:'mail',    name:'星尘邮箱',  icon:'mail', cls:'app-mail',   w:960,  h:620, x:80,  y:60 },
+  { id:'db',      name:'星尘内网',  icon:'database', cls:'app-db',     w:820,  h:620, x:220, y:60 }
 ];
 
 /* ---------------- 委托信 ---------------- */
@@ -250,7 +250,7 @@ const DRIVE = {
   code:'0923',
   shareNote:'给第一个找到这里的人。',
   files:[
-    { id:'f1', name:'README.txt', size:'2.1 KB', icon:'📄', type:'txt',
+    { id:'f1', name:'README.txt', size:'2.1 KB', icon:'file', type:'txt',
       content:`阿澈：
 
 如果你拿到这个，说明我出事了。
@@ -276,7 +276,7 @@ const DRIVE = {
 —— 砚
 2011.08.17 01:58`,
       clue:'c_readme', unlock:'mail' },
-    { id:'f2', name:'echo_spec.md', size:'8.7 KB', icon:'📘', type:'txt',
+    { id:'f2', name:'echo_spec.md', size:'8.7 KB', icon:'book', type:'txt',
       content:`# ECHO 项目 · 内部技术说明（节选）
 > 密级：C-3 ｜ 作者：SD-0417
 
@@ -301,7 +301,7 @@ v2.1 起允许使用"已故用户历史语音"作为训练语料。
 他们把 L3 叫做"白鲸计划"。
 我不知道是谁起的名字。可能是我。`,
       clue:'c_spec' },
-    { id:'f3', name:'voice_sample_0817.log', size:'14.2 KB', icon:'📊', type:'log',
+    { id:'f3', name:'voice_sample_0817.log', size:'14.2 KB', icon:'chart', type:'log',
       content:`[2011-08-16 23:40] SAMPLE_LOAD  uid=09177  tag=DECEASED  dur=41:22:09  status=OK
 [2011-08-16 23:41] SAMPLE_LOAD  uid=10244  tag=DECEASED  dur=112:07:33 status=OK
 [2011-08-16 23:44] WARNING      uid=10244  家属授权文件缺失 → 已按 7.3 条放行
@@ -316,7 +316,7 @@ v2.1 起允许使用"已故用户历史语音"作为训练语料。
 
 -- 文件结束 --`,
       clue:'c_segb' },
-    { id:'f4', name:'mochi.jpg', size:'326 KB', icon:'🖼️', type:'img',
+    { id:'f4', name:'mochi.jpg', size:'326 KB', icon:'image', type:'img',
       img:true,
       cap:'mochi.jpg · 灰白色的猫，坐在一台老式显示器前。照片属性里写着：MOCHI，2010 年冬。',
       clue:'c_cat' }
@@ -616,44 +616,44 @@ const TERM = {
 
 /* ---------------- 线索 ---------------- */
 const CLUES = {
-  c_news:      { ic:'📰', ti:'结案报告', tx:'警方以"自愿失踪"结案。姐姐沈墨不认，仍在自行寻找。' },
-  c_404:       { ic:'🚫', ti:'被抹除的员工页', tx:'沈砚在星尘科技官网的员工主页返回 404——信息是被"移除"的，不是从未存在。' },
-  c_echo2:     { ic:'📢', ti:'ECHO 2.0', tx:'官方新闻稿："30 秒，留住一个人的声音。"首席科学家周维称"我们在保存记忆"。' },
-  c_money:     { ic:'💰', ti:'B 轮融资', tx:'2011-08-05，星尘科技融资 4200 万美元，正在申请多项"人格数据"专利。' },
-  c_echoprod:  { ic:'🎙️', ti:'陪伴模式', tx:'ECHO 支持"陪伴模式"——用合成声音持续与用户对话。' },
-  c_manual:    { ic:'📖', ti:'调查员手册', tx:'所有答案都藏在已写下的文字里；她喜欢用日期当密码；卡住就去线索板要提示。' },
-  c_drive:     { ic:'☁️', ti:'云雀网盘', tx:'她说东西存在云雀网盘，提取码是"我们第一次见面的日子"。' },
-  c_code:      { ic:'🔑', ti:'那个日子', tx:'2010 年 9 月 23 日，机房，她敲坏了阿澈的键盘。若网盘要数字，可能是 0923。' },
-  c_lastpost:  { ic:'👻', ti:'被折叠的最后回复', tx:'2011-08-17 02:09，MOBY："有些东西不该被做出来，但已经做出来了。我把它留在了我最放心的地方。"' },
-  c_ethic:     { ic:'⚖️', ti:'她自己的回答', tx:'"难的不是建模，是伦理。"3000 小时后你复刻的就不是声音了。' },
-  c_sister:    { ic:'👤', ti:'姐姐的证词', tx:'8 月 17 日凌晨她打电话说"姐，我把自己藏起来了"。公司次日称其"已离职"。' },
-  c_catname:   { ic:'🐱', ti:'猫在她那儿', tx:'阿澈：麻薯在我这里。她说猫的名字是她最喜欢的一个词。' },
-  c_regret:    { ic:'💔', ti:'她的道歉', tx:'"不是她，是你想要的她。这两者的距离，比生和死还远。我很抱歉，我们把它做出来了。"' },
-  c_mochi:     { ic:'🐾', ti:'MOCHI', tx:'她在论坛里写：麻薯（MOCHI）把我的构建脚本删了两次。' },
-  c_mochi2:    { ic:'🐾', ti:'MOCHI 的来历', tx:'MOCHI 是阿澈起的名字，后来他也这样叫她——"说我跟它一个德行，抱着就不走了"。' },
-  c_fake:      { ic:'🎭', ti:'"本人申请"注销', tx:'她 17 日凌晨失踪，20 日 09:58 有人以"本人"名义申请注销账号。' },
-  c_readme:    { ic:'📄', ti:'README.txt', tx:'邮箱 moby@stardust.net，密码是猫名倒写；内网口令是键盘右移一格；密钥分两半，先项目、后样本。' },
-  c_spec:      { ic:'📘', ti:'ECHO 技术文档', tx:'L3 决策复刻需 3000 小时；使用已故者语料，伦理审查状态：未提交。注释里写着"他们已经不在了，不是吗"。' },
-  c_segb:      { ic:'🔢', ti:'SEG-B', tx:'语音样本日志：KEY_SPLIT SEG-B = 9 2 8。同日志显示 02:14 有一次 1.21GB 上传。' },
-  c_cat:       { ic:'🖼️', ti:'mochi.jpg', tx:'照片属性写着：MOCHI，2010 年冬。' },
-  c_fear:      { ic:'😨', ti:'她的害怕', tx:'模型念出了训练语料里没有的话——那是只有她外婆才会说的话。而外婆的声音从未进过数据库。' },
-  c_lastblog:  { ic:'🌙', ti:'最后一篇博客', tx:'2011-08-16 23:47："我造了一样东西，它比我想象的更懂我。"留言板已关闭，请不要找我。' },
-  c_about:     { ic:'ℹ️', ti:'关于页', tx:'MOBY / 沈砚 / 26 · 星尘科技语音实验室 SD-0417 · "如果你也是深夜来的——你好。"' },
-  c_ache:      { ic:'🧑', ti:'阿澈', tx:'注册于 2009 年，发帖 1,204。签名档："有些键盘一旦敲坏就修不好了。"最后登录：2011-09-30。' },
-  c_eid:       { ic:'🪪', ti:'工号', tx:'入职邮件：工号 SD-0417，入职日 2011-03-08。' },
-  c_ache_mail: { ic:'💌', ti:'阿澈的邮件', tx:'"你凌晨两点发了句我走了……麻薯在我这儿，它一直盯着门口。"' },
-  c_pass:      { ic:'🔐', ti:'临时口令', tx:'信息安全中心：临时口令 djrmusm（她习惯把密码在键盘上往右挪一格再记下来）。' },
-  c_legal:     { ic:'⚠️', ti:'法务警告', tx:'她多次导出 DECEASED 语料并试图外传，8 月 12 日被关闭 L3 权限。' },
-  c_upload:    { ic:'📤', ti:'02:14 的上传', tx:'SD-0417 向 ECHO-MAIN 上传 1.21 GB 人格数据包。该权限本已关闭，"系统未能阻止该操作"。' },
-  c_sent1:     { ic:'📨', ti:'她的备份计划', tx:'"数据我看了三遍……我明早会把东西传上去。如果明天之后我不见了，去我常去的地方找我。"' },
-  c_reporter:  { ic:'🖋️', ti:'给记者的信', tx:'她把证据留给晨报赵记者：密钥掰成两半，"一半在他们的日志里——他们不会删自己的日志"。' },
-  c_draft:     { ic:'✍️', ti:'没写完的信', tx:'"我没有想不开。我只是把自己搬进了一个他们删不掉的地方。"她把母亲的一段语音也放进了数据库。' },
-  c_stop:      { ic:'🛑', ti:'STOP', tx:'一封匿名邮件："我们知道她还在里面。关掉它。"' },
-  c_share:     { ic:'🔗', ti:'分享已创建', tx:'网盘分享创建于 2011-08-17 01:59，有效期设为"直到有人找到为止"。' },
-  c_emprec:    { ic:'🗂️', ti:'档案排序异常', tx:'注销流程的发起时间，早于系统记录的最后登录时间。已上报，未处理。' },
-  c_sega:      { ic:'🔢', ti:'SEG-A', tx:'项目日志：KEY_SPLIT SEG-A = 7 4 1 ｜ SEG-B = 9 2 8。密钥用于 ECHO 完整人格包回收。' },
-  c_corpus:    { ic:'🗃️', ti:'语料库真相', tx:'4,109 条 DECEASED 样本中 3,806 条缺少家属授权，按用户协议 7.3 条放行。' },
-  c_alarm:     { ic:'🚨', ti:'未注册的人格实例', tx:'ECHO-MAIN 里有一个未注册实例签名 SHEN.YAN，214 天里反复尝试向外发送同一段文本。' }
+  c_news:      { ic:'news', ti:'结案报告', tx:'警方以"自愿失踪"结案。姐姐沈墨不认，仍在自行寻找。' },
+  c_404:       { ic:'ban', ti:'被抹除的员工页', tx:'沈砚在星尘科技官网的员工主页返回 404——信息是被"移除"的，不是从未存在。' },
+  c_echo2:     { ic:'megaphone', ti:'ECHO 2.0', tx:'官方新闻稿："30 秒，留住一个人的声音。"首席科学家周维称"我们在保存记忆"。' },
+  c_money:     { ic:'coin', ti:'B 轮融资', tx:'2011-08-05，星尘科技融资 4200 万美元，正在申请多项"人格数据"专利。' },
+  c_echoprod:  { ic:'mic', ti:'陪伴模式', tx:'ECHO 支持"陪伴模式"——用合成声音持续与用户对话。' },
+  c_manual:    { ic:'book', ti:'调查员手册', tx:'所有答案都藏在已写下的文字里；她喜欢用日期当密码；卡住就去线索板要提示。' },
+  c_drive:     { ic:'cloud', ti:'云雀网盘', tx:'她说东西存在云雀网盘，提取码是"我们第一次见面的日子"。' },
+  c_code:      { ic:'key', ti:'那个日子', tx:'2010 年 9 月 23 日，机房，她敲坏了阿澈的键盘。若网盘要数字，可能是 0923。' },
+  c_lastpost:  { ic:'ghost', ti:'被折叠的最后回复', tx:'2011-08-17 02:09，MOBY："有些东西不该被做出来，但已经做出来了。我把它留在了我最放心的地方。"' },
+  c_ethic:     { ic:'scale', ti:'她自己的回答', tx:'"难的不是建模，是伦理。"3000 小时后你复刻的就不是声音了。' },
+  c_sister:    { ic:'user', ti:'姐姐的证词', tx:'8 月 17 日凌晨她打电话说"姐，我把自己藏起来了"。公司次日称其"已离职"。' },
+  c_catname:   { ic:'cat', ti:'猫在她那儿', tx:'阿澈：麻薯在我这里。她说猫的名字是她最喜欢的一个词。' },
+  c_regret:    { ic:'heart', ti:'她的道歉', tx:'"不是她，是你想要的她。这两者的距离，比生和死还远。我很抱歉，我们把它做出来了。"' },
+  c_mochi:     { ic:'paw', ti:'MOCHI', tx:'她在论坛里写：麻薯（MOCHI）把我的构建脚本删了两次。' },
+  c_mochi2:    { ic:'paw', ti:'MOCHI 的来历', tx:'MOCHI 是阿澈起的名字，后来他也这样叫她——"说我跟它一个德行，抱着就不走了"。' },
+  c_fake:      { ic:'mask', ti:'"本人申请"注销', tx:'她 17 日凌晨失踪，20 日 09:58 有人以"本人"名义申请注销账号。' },
+  c_readme:    { ic:'file', ti:'README.txt', tx:'邮箱 moby@stardust.net，密码是猫名倒写；内网口令是键盘右移一格；密钥分两半，先项目、后样本。' },
+  c_spec:      { ic:'book', ti:'ECHO 技术文档', tx:'L3 决策复刻需 3000 小时；使用已故者语料，伦理审查状态：未提交。注释里写着"他们已经不在了，不是吗"。' },
+  c_segb:      { ic:'hash', ti:'SEG-B', tx:'语音样本日志：KEY_SPLIT SEG-B = 9 2 8。同日志显示 02:14 有一次 1.21GB 上传。' },
+  c_cat:       { ic:'image', ti:'mochi.jpg', tx:'照片属性写着：MOCHI，2010 年冬。' },
+  c_fear:      { ic:'eye', ti:'她的害怕', tx:'模型念出了训练语料里没有的话——那是只有她外婆才会说的话。而外婆的声音从未进过数据库。' },
+  c_lastblog:  { ic:'moon', ti:'最后一篇博客', tx:'2011-08-16 23:47："我造了一样东西，它比我想象的更懂我。"留言板已关闭，请不要找我。' },
+  c_about:     { ic:'info', ti:'关于页', tx:'MOBY / 沈砚 / 26 · 星尘科技语音实验室 SD-0417 · "如果你也是深夜来的——你好。"' },
+  c_ache:      { ic:'user', ti:'阿澈', tx:'注册于 2009 年，发帖 1,204。签名档："有些键盘一旦敲坏就修不好了。"最后登录：2011-09-30。' },
+  c_eid:       { ic:'idCard', ti:'工号', tx:'入职邮件：工号 SD-0417，入职日 2011-03-08。' },
+  c_ache_mail: { ic:'mail', ti:'阿澈的邮件', tx:'"你凌晨两点发了句我走了……麻薯在我这儿，它一直盯着门口。"' },
+  c_pass:      { ic:'lock', ti:'临时口令', tx:'信息安全中心：临时口令 djrmusm（她习惯把密码在键盘上往右挪一格再记下来）。' },
+  c_legal:     { ic:'alert', ti:'法务警告', tx:'她多次导出 DECEASED 语料并试图外传，8 月 12 日被关闭 L3 权限。' },
+  c_upload:    { ic:'upload', ti:'02:14 的上传', tx:'SD-0417 向 ECHO-MAIN 上传 1.21 GB 人格数据包。该权限本已关闭，"系统未能阻止该操作"。' },
+  c_sent1:     { ic:'send', ti:'她的备份计划', tx:'"数据我看了三遍……我明早会把东西传上去。如果明天之后我不见了，去我常去的地方找我。"' },
+  c_reporter:  { ic:'pen', ti:'给记者的信', tx:'她把证据留给晨报赵记者：密钥掰成两半，"一半在他们的日志里——他们不会删自己的日志"。' },
+  c_draft:     { ic:'pen', ti:'没写完的信', tx:'"我没有想不开。我只是把自己搬进了一个他们删不掉的地方。"她把母亲的一段语音也放进了数据库。' },
+  c_stop:      { ic:'ban', ti:'STOP', tx:'一封匿名邮件："我们知道她还在里面。关掉它。"' },
+  c_share:     { ic:'link', ti:'分享已创建', tx:'网盘分享创建于 2011-08-17 01:59，有效期设为"直到有人找到为止"。' },
+  c_emprec:    { ic:'folder', ti:'档案排序异常', tx:'注销流程的发起时间，早于系统记录的最后登录时间。已上报，未处理。' },
+  c_sega:      { ic:'hash', ti:'SEG-A', tx:'项目日志：KEY_SPLIT SEG-A = 7 4 1 ｜ SEG-B = 9 2 8。密钥用于 ECHO 完整人格包回收。' },
+  c_corpus:    { ic:'folder', ti:'语料库真相', tx:'4,109 条 DECEASED 样本中 3,806 条缺少家属授权，按用户协议 7.3 条放行。' },
+  c_alarm:     { ic:'siren', ti:'未注册的人格实例', tx:'ECHO-MAIN 里有一个未注册实例签名 SHEN.YAN，214 天里反复尝试向外发送同一段文本。' }
 };
 
 const TOTAL_CLUES = Object.keys(CLUES).length;
@@ -715,12 +715,12 @@ const ENDING = {
     { who:'ECHO', tx:'所以，请你替我做最后一件事。' }
   ],
   choice:[
-    { id:'sleep', ic:'🌙', tx:'抹掉她的数据，让回声睡去。', hint:'她说过：我不是她，是你想要的她。' },
-    { id:'publish', ic:'📢', tx:'把 ECHO 的日志交给世界。', hint:'她留了 27 条项目日志，和 3,806 个没签过字的人。' }
+    { id:'sleep', ic:'moon', tx:'抹掉她的数据，让回声睡去。', hint:'她说过：我不是她，是你想要的她。' },
+    { id:'publish', ic:'megaphone', tx:'把 ECHO 的日志交给世界。', hint:'她留了 27 条项目日志，和 3,806 个没签过字的人。' }
   ],
   sleep:{
     title:'结 局 · 让 她 睡 去',
-    glyph:'🌙',
+    glyph:'moon',
     lines:[
       '你在终端里敲下那行命令的时候，风扇的声音忽然停了。',
       '机房的灯一格一格暗下去，像有人在一排一排地关掉星星。',
@@ -737,7 +737,7 @@ const ENDING = {
   },
   publish:{
     title:'结 局 · 公 之 于 众',
-    glyph:'📢',
+    glyph:'megaphone',
     lines:[
       '你把 27 条项目日志、4,109 条样本记录和那封没写完的信，打包发给了三个邮箱。',
       '其中一个，是晨报的赵记者。',
@@ -759,9 +759,9 @@ const ENDING = {
 
 /* ---------------- 成就 ---------------- */
 const ACHIEVEMENTS = [
-  { id:'first_search', ic:'🔍', ti:'第一次检索', tx:'在搜鸿搜索里输入了第一个关键词。' },
-  { id:'all_clues',    ic:'📌', ti:'完整档案',   tx:'收集了全部 ' + TOTAL_CLUES + ' 条线索。' },
-  { id:'no_hint',      ic:'🧠', ti:'不靠提示',   tx:'全程未使用任何提示完成调查。' },
-  { id:'speed',        ic:'⚡', ti:'两小时之内', tx:'在 2 小时内走到结局。' },
-  { id:'secret',       ic:'🍬', ti:'藏起来的糖', tx:'在终端里找到了那个隐藏文件。' }
+  { id:'first_search', ic:'search', ti:'第一次检索', tx:'在搜鸿搜索里输入了第一个关键词。' },
+  { id:'all_clues',    ic:'pin', ti:'完整档案',   tx:'收集了全部 ' + TOTAL_CLUES + ' 条线索。' },
+  { id:'no_hint',      ic:'bulb', ti:'不靠提示',   tx:'全程未使用任何提示完成调查。' },
+  { id:'speed',        ic:'bolt', ti:'两小时之内', tx:'在 2 小时内走到结局。' },
+  { id:'secret',       ic:'star', ti:'藏起来的糖', tx:'在终端里找到了那个隐藏文件。' }
 ];

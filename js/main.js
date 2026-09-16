@@ -51,6 +51,7 @@ function boot(){
 
 function afterBoot(){
   const had = load();
+  hydrateIcons(document);
   buildDock(); buildIcons(); renderMenubar(); renderClock();
   setInterval(renderClock, 15000);
 
@@ -64,12 +65,15 @@ function afterBoot(){
   if (S.end) setTimeout(() => Ending.finish(S.end), 700);
 
   // 顶栏
-  $('#mbSound').onclick = () => {
-    S.sound = !S.sound; save(); sfx.click();
-    $('#mbSound').textContent = S.sound ? '♪ 音效' : '🔇 静音';
-    toast(S.sound ? '音效已开启' : '音效已关闭');
+  const soundBtn = () => {
+    $('#mbSoundIc').innerHTML = icon(S.sound ? 'volume' : 'mute', 15);
+    $('#mbSoundTx').textContent = S.sound ? '音效' : '静音';
   };
-  $('#mbSound').textContent = S.sound ? '♪ 音效' : '🔇 静音';
+  $('#mbSound').onclick = () => {
+    S.sound = !S.sound; save(); sfx.click(); soundBtn();
+    toast(S.sound ? '音效已开启' : '音效已关闭', '', S.sound ? 'volume' : 'mute');
+  };
+  soundBtn();
 
   $('#mbSave').onclick = () => { save(); sfx.ok(); toast('进度已保存到本机', 'good'); };
 
@@ -109,6 +113,7 @@ function afterBoot(){
 if (location.hash === '#reset'){ localStorage.removeItem(SAVE_KEY); }
 
 document.addEventListener('DOMContentLoaded', () => {
-  $('#mbClue').textContent = '线索 0/' + TOTAL_CLUES;
+  const clue = $('#mbClueTx') || $('#mbClue');
+  if (clue) clue.textContent = '线索 0/' + TOTAL_CLUES;
   boot();
 });

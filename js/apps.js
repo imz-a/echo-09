@@ -20,7 +20,8 @@ function bindKw(root){
     openApp('search', { q: el.dataset.kw });
   });
 }
-const AV_COLORS = ['#3fe0c5','#8f7bff','#ffb454','#ff7ab8','#4f8cff','#5ddc7a','#ff8f6b'];
+/* 头像配色：低饱和暖色，避免高亮荧光破坏整体调性 */
+const AV_COLORS = ['#d8a34a','#7fa894','#c58a8a','#8a94ad','#a89a6f','#6f8f9c','#b07a5f'];
 function avColor(name){
   let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return AV_COLORS[h % AV_COLORS.length];
@@ -97,9 +98,10 @@ Apps.search = {
         '<div class="se-count">找到约 ' + hits.length + ' 条结果（用时 0.0' + (10 + Math.floor(Math.random() * 80)) + ' 秒）</div>' +
         '<div class="se-res">' + hits.map((r, i) => {
           let lock = '';
-          if (r.open && r.open.app === 'drive' && !S.solved.drive) lock = '<div class="se-lock">🔒 该分享需要 4 位提取码</div>';
-          if (r.open && r.open.app === 'mail' && !S.solved.mail) lock = '<div class="se-lock">🔒 需要账号与密码</div>';
-          if (r.open && r.open.app === 'db' && !S.solved.db)   lock = '<div class="se-lock">🔒 需要工号与内网口令</div>';
+          const lk = icon('lock', 13);
+          if (r.open && r.open.app === 'drive' && !S.solved.drive) lock = '<div class="se-lock">' + lk + ' 该分享需要 4 位提取码</div>';
+          if (r.open && r.open.app === 'mail' && !S.solved.mail) lock = '<div class="se-lock">' + lk + ' 需要账号与密码</div>';
+          if (r.open && r.open.app === 'db' && !S.solved.db)   lock = '<div class="se-lock">' + lk + ' 需要工号与内网口令</div>';
           return '<div class="se-item" data-i="' + i + '">' +
             '<div class="se-url"><span class="av"></span>' + esc(r.url) + '</div>' +
             '<div class="se-t">' + esc(r.title) + '</div>' +
@@ -178,7 +180,7 @@ Apps.forum = {
     body.innerHTML =
       '<div class="fm-head">' +
         '<div class="fm-name" style="font-size:14px">深蓝 <span>BBS</span> › 主题</div>' +
-        '<div class="fm-meta"><span id="fmBack" style="cursor:pointer;color:var(--acc)">← 返回版块</span></div>' +
+        '<div class="fm-meta"><span id="fmBack" class="back-link">' + icon('back', 13) + '返回版块</span></div>' +
       '</div>' +
       '<div class="fm-post">' +
         '<div class="fm-ptitle">' + esc(t.title) + '</div>' +
@@ -197,7 +199,7 @@ Apps.forum = {
                 '<span class="post-dt">' + esc(p.dt) + '</span>' +
               '</div>' +
               '<div class="post-tx">' + mark(p.tx) + '</div>' +
-              (p.img ? '<div class="quote">📷 ' + esc(p.img.cap) + '</div>' : '') +
+              (p.img ? '<div class="quote">' + icon('image', 14) + '<span>' + esc(p.img.cap) + '</span></div>' : '') +
               (p.sig ? '<div class="post-sig">' + esc(p.sig) + '</div>' : '') +
             '</div>' +
           '</div>';
@@ -226,12 +228,12 @@ Apps.drive = {
     const body = $('.win-body', w);
     body.innerHTML =
       '<div class="dr-head">' +
-        '<div class="dr-logo">☁</div>' +
+        '<div class="dr-logo">' + icon('cloud', 22) + '</div>' +
         '<div><div class="dr-name">云雀网盘</div><div class="dr-sub">YUNQ PAN · 分享者 MOBY · 4 个文件</div></div>' +
       '</div>' +
       '<div class="dr-body"><div class="dr-lock">' +
-        '<div class="big">🔐</div>' +
-        '<p>该分享设置了提取码。<br>分享说明写着：<b style="color:#cfe0ff">「' + esc(DRIVE.shareNote) + '」</b><br>' +
+        '<div class="big">' + icon('lock', 34) + '</div>' +
+        '<p>该分享设置了提取码。<br>分享说明写着：<b>「' + esc(DRIVE.shareNote) + '」</b><br>' +
         '<span style="color:var(--txt-3);font-size:12px">（4 位数字）</span></p>' +
         '<div class="dr-code"><input type="text" id="drCode" maxlength="4" placeholder="····" autocomplete="off"></div>' +
         '<div id="drMsg"></div>' +
@@ -242,7 +244,7 @@ Apps.drive = {
       const v = (inp.value || '').trim();
       if (v === DRIVE.code){
         S.solved.drive = true; save(); sfx.ok();
-        toast('✅ 提取码正确，文件已解锁', 'good');
+        toast('提取码正确，文件已解锁', 'good', 'check');
         addClue('c_code');
         this.render(w);
       } else {
@@ -257,15 +259,15 @@ Apps.drive = {
     const body = $('.win-body', w);
     body.innerHTML =
       '<div class="dr-head">' +
-        '<div class="dr-logo">☁</div>' +
+        '<div class="dr-logo">' + icon('cloud', 22) + '</div>' +
         '<div><div class="dr-name">云雀网盘 · moby_last</div><div class="dr-sub">提取码 0923 · 有效期：直到有人找到为止</div></div>' +
       '</div>' +
       '<div class="dr-body">' +
-        '<div class="ok-box">✅ 提取成功。共 4 个文件，最后修改时间均为 2011-08-17 01:5x。</div>' +
+        '<div class="ok-box">' + icon('check', 14) + '<span>提取成功。共 4 个文件，最后修改时间均为 2011-08-17 01:5x。</span></div>' +
         '<div class="sec-title">文件列表</div>' +
         '<div class="dr-files">' + DRIVE.files.map(f =>
           '<div class="dr-file" data-f="' + f.id + '">' +
-            '<div class="fi">' + f.icon + '</div>' +
+            '<div class="fi">' + icon(f.icon, 18) + '</div>' +
             '<div class="fn">' + esc(f.name) + '</div>' +
             '<div class="fs">' + f.size + '</div>' +
           '</div>').join('') + '</div>' +
@@ -274,22 +276,22 @@ Apps.drive = {
     $$('.dr-file', body).forEach(el => el.onclick = () => {
       sfx.click();
       const f = DRIVE.files.find(x => x.id === el.dataset.f);
-      $$('.dr-file', body).forEach(x => x.style.borderColor = '');
-      el.style.borderColor = 'rgba(79,140,255,.6)';
+      $$('.dr-file', body).forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
       const v = $('#drView', body);
       if (f.type === 'img'){
         v.innerHTML =
           '<div class="sec-title">' + esc(f.name) + '</div>' +
-          '<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0a0d16">' +
-            '<div style="height:220px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 60%,#2a2f45,#12151f)">' +
+          '<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--ink-1)">' +
+            '<div style="height:220px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 60%,#2b2620,#141210)">' +
               '<svg width="150" height="150" viewBox="0 0 120 120">' +
                 '<ellipse cx="60" cy="100" rx="34" ry="8" fill="rgba(0,0,0,.35)"/>' +
-                '<path d="M38 96 Q30 60 42 48 Q48 40 60 40 Q72 40 78 48 Q90 60 82 96 Z" fill="#c9d2e0"/>' +
-                '<path d="M40 46 L36 28 L54 38 Z" fill="#c9d2e0"/><path d="M80 46 L84 28 L66 38 Z" fill="#c9d2e0"/>' +
-                '<path d="M41 43 L39 33 L49 38 Z" fill="#f0a0ae"/><path d="M79 43 L81 33 L71 38 Z" fill="#f0a0ae"/>' +
-                '<circle cx="51" cy="56" r="4" fill="#2a3145"/><circle cx="69" cy="56" r="4" fill="#2a3145"/>' +
-                '<path d="M56 66 Q60 70 64 66" stroke="#2a3145" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-                '<path d="M82 92 Q104 86 96 66" stroke="#c9d2e0" stroke-width="9" fill="none" stroke-linecap="round"/>' +
+                '<path d="M38 96 Q30 60 42 48 Q48 40 60 40 Q72 40 78 48 Q90 60 82 96 Z" fill="#dcd4c4"/>' +
+                '<path d="M40 46 L36 28 L54 38 Z" fill="#dcd4c4"/><path d="M80 46 L84 28 L66 38 Z" fill="#dcd4c4"/>' +
+                '<path d="M41 43 L39 33 L49 38 Z" fill="#c58a8a"/><path d="M79 43 L81 33 L71 38 Z" fill="#c58a8a"/>' +
+                '<circle cx="51" cy="56" r="4" fill="#332e26"/><circle cx="69" cy="56" r="4" fill="#332e26"/>' +
+                '<path d="M56 66 Q60 70 64 66" stroke="#332e26" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+                '<path d="M82 92 Q104 86 96 66" stroke="#dcd4c4" stroke-width="9" fill="none" stroke-linecap="round"/>' +
               '</svg>' +
             '</div>' +
             '<div style="padding:12px 15px;font-size:12px;color:var(--txt-3);font-family:var(--mono)">' + esc(f.cap) + '</div>' +
@@ -344,7 +346,7 @@ Apps.blog = {
     body.innerHTML =
       '<div class="bl-head" style="padding:22px 20px">' +
         '<div class="bl-title" style="font-size:17px">' + esc(BLOG.title) + '</div>' +
-        '<div class="bl-sub" style="letter-spacing:1px"><span id="blBack" style="cursor:pointer;color:var(--acc)">← 返回文章列表</span></div>' +
+        '<div class="bl-sub" style="letter-spacing:1px"><span id="blBack" class="back-link">' + icon('back', 13) + '返回文章列表</span></div>' +
       '</div>' +
       '<div class="bl-body"><div class="bl-full">' +
         '<div class="t">' + esc(p.t) + '</div>' +
@@ -384,7 +386,7 @@ Apps.mail = {
       const p = ($('#mlP', w).value || '').trim().toLowerCase();
       if ((u === 'moby@stardust.net' || u === 'moby' || u === 'sd-0417') && p === MAIL.pass){
         S.solved.mail = true; save(); sfx.ok();
-        toast('✅ 登录成功：' + MAIL.user, 'good');
+        toast('登录成功：' + MAIL.user, 'good', 'check');
         this.render(w);
       } else {
         sfx.bad();
@@ -416,7 +418,7 @@ Apps.mail = {
               '<div class="sb">' + esc(m.subj) + '</div>' +
             '</div>').join('') : '<div class="ml-empty">此文件夹为空</div>') +
         '</div>' +
-        '<div class="ml-read" id="mlRead"><div class="ml-empty">← 选择一封邮件</div></div>' +
+        '<div class="ml-read" id="mlRead"><div class="ml-empty">' + icon('mailOpen', 15) + '选择一封邮件</div></div>' +
       '</div>';
 
     $$('.ml-folder', body).forEach(f => f.onclick = () => { sfx.click(); this.inbox(w, f.dataset.f); });
@@ -453,11 +455,11 @@ Apps.db = {
     body.innerHTML =
       '<div class="db-login">' +
         '<div class="lg">STARDUST INTRANET</div>' +
-        '<h3 style="font-size:19px;color:#d5f2ec;margin-bottom:6px">员工通道</h3>' +
-        '<p style="font-size:12.5px;color:#5f8b83;margin-bottom:24px;line-height:1.8">' +
+        '<h3 style="font-size:19px;color:var(--txt);margin-bottom:8px">员工通道</h3>' +
+        '<p style="font-size:12.5px;color:var(--txt-3);margin-bottom:24px;line-height:1.85">' +
           '仅限在职员工访问。所有操作将被记录。<br>口令为本人姓名全拼（小写）。</p>' +
-        '<div class="ml-field"><label style="color:#4e7a72">工号</label><input type="text" id="dbU" placeholder="SD-0000" autocomplete="off"></div>' +
-        '<div class="ml-field"><label style="color:#4e7a72">口令</label><input type="password" id="dbP" placeholder="••••••"></div>' +
+        '<div class="ml-field"><label>工号</label><input type="text" id="dbU" placeholder="SD-0000" autocomplete="off"></div>' +
+        '<div class="ml-field"><label>口令</label><input type="password" id="dbP" placeholder="••••••"></div>' +
         '<div id="dbMsg"></div>' +
         '<button class="btn primary" id="dbGo" style="width:100%;margin-top:8px">进入内网</button>' +
       '</div>';
@@ -466,7 +468,7 @@ Apps.db = {
       const p = ($('#dbP', w).value || '').trim().toLowerCase();
       if ((u === 'sd-0417' || u === '0417' || u === 'sd0417') && p === DB_SITE.pass){
         S.solved.db = true; save(); sfx.ok();
-        toast('✅ 内网身份验证通过 · SD-0417', 'good');
+        toast('内网身份验证通过 · SD-0417', 'good', 'check');
         this.render(w);
       } else {
         sfx.bad();
@@ -493,42 +495,41 @@ Apps.db = {
       b.innerHTML =
         '<div class="db-card" style="margin-bottom:16px">' +
           '<div class="k">EMPLOYEE RECORD</div>' +
-          '<div style="font-size:16px;color:#d5f2ec;margin:6px 0 14px">SD-0417</div>' +
+          '<div style="font-size:16px;color:#daeae2;margin:6px 0 14px;letter-spacing:1px">SD-0417</div>' +
           '<div class="db-grid">' + DB_SITE.emp.fields.map(f =>
             '<div class="db-card"><div class="k">' + esc(f.k) + '</div>' +
-            '<div class="v" style="' + (f.red ? 'color:#ff8b95' : '') + '">' + esc(f.v) + '</div></div>').join('') +
+            '<div class="v' + (f.red ? ' red' : '') + '">' + esc(f.v) + '</div></div>').join('') +
           '</div>' +
         '</div>' +
         '<div class="db-warn">※ ' + esc(DB_SITE.emp.note) + '</div>';
       addClue('c_emprec');
     }
     if (id === 'proj'){
-      b.innerHTML = '<div class="k" style="color:#4e7a72;font-size:11px;letter-spacing:1px;margin-bottom:12px">' +
+      b.innerHTML = '<div class="db-sec">' +
         esc(DB_SITE.proj.head) + ' ｜ ' + esc(DB_SITE.proj.sub) + '</div>' +
         DB_SITE.proj.logs.map(l =>
           '<div class="db-log ' + (l.red ? 'red' : '') + '">' +
             '<div class="t">' + esc(l.t) + '</div>' +
-            '<div class="c" style="' + (l.hi ? 'color:var(--acc-2);font-weight:700' : '') + '">' + esc(l.c) + '</div>' +
+            '<div class="c' + (l.hi ? ' hi' : '') + '">' + esc(l.c) + '</div>' +
           '</div>').join('');
       addClue('c_sega'); S.flags.segA = true; save();
     }
     if (id === 'corp'){
-      b.innerHTML = '<div class="k" style="color:#4e7a72;font-size:11px;letter-spacing:1px;margin-bottom:12px">' +
+      b.innerHTML = '<div class="db-sec">' +
         esc(DB_SITE.corp.head) + ' ｜ ' + esc(DB_SITE.corp.sub) + '</div>' +
         '<div class="db-warn" style="margin-bottom:16px">' + esc(DB_SITE.corp.warn) + '</div>' +
-        '<div style="border:1px solid rgba(63,224,197,.18);border-radius:10px;overflow:hidden">' +
-          '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:10px 15px;background:rgba(63,224,197,.07);font-size:11px;color:#4e7a72">' +
-            '<span>UID</span><span>标记</span><span>时长</span><span>授权</span></div>' +
+        '<div class="db-table">' +
+          '<div class="db-tr head"><span>UID</span><span>标记</span><span>时长</span><span>授权</span></div>' +
           DB_SITE.corp.rows.map(r =>
-            '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:10px 15px;border-top:1px solid rgba(63,224,197,.1);font-size:12px;' +
-              (r.red ? 'color:#ff8b95;background:rgba(255,95,109,.06)' : 'color:#a9c9c1') + '">' +
-              '<span>' + esc(r.uid) + '</span><span>' + esc(r.tag) + '</span><span>' + esc(r.dur) + '</span><span>' + esc(r.auth) + '</span>' +
+            '<div class="db-tr' + (r.red ? ' red' : '') + '">' +
+              '<span>' + esc(r.uid) + '</span><span>' + esc(r.tag) + '</span>' +
+              '<span>' + esc(r.dur) + '</span><span>' + esc(r.auth) + '</span>' +
             '</div>').join('') +
         '</div>';
       addClue('c_corpus');
     }
     if (id === 'alarm'){
-      b.innerHTML = '<div class="k" style="color:#4e7a72;font-size:11px;letter-spacing:1px;margin-bottom:12px">' +
+      b.innerHTML = '<div class="db-sec">' +
         esc(DB_SITE.alarm.head) + ' ｜ ' + esc(DB_SITE.alarm.sub) + '</div>' +
         '<div class="db-warn" style="white-space:pre-wrap;font-family:var(--mono);font-size:12px">' + esc(DB_SITE.alarm.alert) + '</div>';
       addClue('c_alarm');
@@ -616,7 +617,7 @@ Apps.term = {
         if (r === DB_SITE.pass){
           S.flags.decodeTried = true; save();
           this.print(w, [{ t:'✔ 校验通过：该结果可作为内网口令使用。', cls:'hi' }]);
-          toast('🔓 已还原内网口令', 'good');
+          toast('已还原内网口令', 'good', 'check');
         }
         break;
       }
@@ -712,7 +713,7 @@ Apps.notes = {
         (S.clues.length ? S.clues.slice().reverse().map(id => {
           const c = CLUES[id];
           return '<div class="nt-clue"><div class="h">' +
-            '<span class="ic">' + c.ic + '</span><span class="ti">' + esc(c.ti) + '</span>' +
+            '<span class="ic">' + icon(c.ic, 16) + '</span><span class="ti">' + esc(c.ti) + '</span>' +
             '<span class="tm">已归档</span></div>' +
             '<div class="tx">' + esc(c.tx) + '</div></div>';
         }).join('') :
@@ -730,7 +731,7 @@ Apps.notes = {
     const show = (level) => {
       S.hints++; save();
       const txt = level === 2 ? (DIRECT[stage] || hint.t) : hint.t;
-      $('#hintOut', body).innerHTML = '<div class="nt-hint-box">' + (level === 2 ? '🔓 ' : '💡 ') + esc(txt) + '</div>';
+      $('#hintOut', body).innerHTML = '<div class="nt-hint-box">' + (level === 2 ? icon('key',14) : icon('bulb',14)) + '<span>' + esc(txt) + '</span></div>';
       sfx.click();
     };
     $('#h1', body).onclick = () => show(1);
@@ -745,7 +746,7 @@ const Ending = {
   start(){
     const m = $('#modal'), c = $('#modalCard');
     m.classList.remove('hidden');
-    c.innerHTML = '<div class="ending"><div class="glyph">◉</div><h2>E C H O</h2>' +
+    c.innerHTML = '<div class="ending"><div class="glyph">' + icon('ripple', 40) + '</div><h2>E C H O</h2>' +
       '<div class="sub">信号已接通 · 实例 SHEN.YAN · 来源 ECHO-MAIN</div>' +
       '<div id="endOut" style="text-align:left;min-height:120px"></div>' +
       '<div id="endOpts" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px"></div></div>';
@@ -760,11 +761,11 @@ const Ending = {
         typeLines(out, ENDING.reply[id].map(l => ({ t:'[' + l.who + '] ' + l.tx, cls:'big' })), () => {
           setTimeout(() => {
             typeLines(out, ENDING.main.map(l => ({ t:'[' + l.who + '] ' + l.tx })), () => {
-              opts.innerHTML = '<div style="width:100%">' +
+              opts.innerHTML = '<div class="choices">' +
                 ENDING.choice.map(ch =>
-                  '<button class="btn" data-c="' + ch.id + '" style="width:100%;text-align:left;margin-bottom:9px;padding:13px 16px">' +
-                    '<div style="font-size:14px">' + ch.ic + ' ' + esc(ch.tx) + '</div>' +
-                    '<div style="font-size:11.5px;color:var(--txt-3);margin-top:4px">' + esc(ch.hint) + '</div>' +
+                  '<button class="choice" data-c="' + ch.id + '">' +
+                    '<span class="ci">' + icon(ch.ic, 20) + '</span>' +
+                    '<span class="ct"><b>' + esc(ch.tx) + '</b><i>' + esc(ch.hint) + '</i></span>' +
                   '</button>').join('') + '</div>';
               $$('#endOpts [data-c]').forEach(x => x.onclick = () => this.finish(x.dataset.c));
             });
@@ -782,7 +783,7 @@ const Ending = {
     const dur = fmtDur(Date.now() - S.start);
     const c = $('#modalCard');
     c.innerHTML = '<div class="ending">' +
-      '<div class="glyph">' + e.glyph + '</div>' +
+      '<div class="glyph">' + icon(e.glyph, 40) + '</div>' +
       '<h2>' + esc(e.title) + '</h2>' +
       '<div class="sub">' + (id === 'sleep' ? '数据已抹除 · 1.21 GB' : '日志已提交 · 27 条记录 / 4,109 条样本') + '</div>' +
       e.lines.map(l => '<p class="line">' + esc(l) + '</p>').join('') +
@@ -794,10 +795,12 @@ const Ending = {
         '<div class="stat"><div class="v">' + S.hints + '</div><div class="l">使用提示</div></div>' +
       '</div>' +
       '<div class="sec-title" style="text-align:left">成就</div>' +
-      ACHIEVEMENTS.map(a =>
-        '<div class="ach ' + (S.ach.includes(a.id) ? 'got' : '') + '">' +
-          '<span class="i">' + (S.ach.includes(a.id) ? a.ic : '🔒') + '</span>' +
-          '<span><b>' + esc(a.ti) + '</b> · ' + esc(a.tx) + '</span></div>').join('') +
+      ACHIEVEMENTS.map(a => {
+        const got = S.ach.includes(a.id);
+        return '<div class="ach ' + (got ? 'got' : '') + '">' +
+          '<span class="i">' + icon(got ? a.ic : 'lock', 18) + '</span>' +
+          '<span><b>' + esc(a.ti) + '</b> · ' + esc(a.tx) + '</span></div>';
+      }).join('') +
       '<div class="acts">' +
         '<button class="btn ghost" id="eClose">留在这里</button>' +
         '<button class="btn primary" id="eAgain">重新开始一次</button>' +

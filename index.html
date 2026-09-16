@@ -36,16 +36,27 @@
   <!-- 顶部状态栏 -->
   <header class="menubar">
     <div class="mb-left">
-      <span class="mb-logo">◈</span>
+      <span class="mb-logo" data-ic="ripple" data-size="16"></span>
       <span class="mb-item">档案终端</span>
       <span class="mb-item">调查模式</span>
-      <span class="mb-item" id="mbClue">线索 0/0</span>
+      <span class="mb-item" id="mbClue">
+        <span class="ic" id="mbClueIc" data-ic="pin" data-size="14"></span>
+        <span id="mbClueTx">线索 0/0</span>
+      </span>
     </div>
     <div class="mb-right">
-      <span class="mb-item" id="mbSound" title="开关音效">♪ 音效</span>
-      <span class="mb-item" id="mbSave" title="保存进度">⤓ 存档</span>
-      <span class="mb-item" id="mbReset" title="重新开始">↺ 重置</span>
-      <span class="mb-item" id="mbHelp">? 帮助</span>
+      <span class="mb-item" id="mbSound" title="开关音效">
+        <span class="ic" id="mbSoundIc"></span><span id="mbSoundTx">音效</span>
+      </span>
+      <span class="mb-item" id="mbSave" title="保存进度">
+        <span class="ic" data-ic="save" data-size="14"></span><span>存档</span>
+      </span>
+      <span class="mb-item" id="mbReset" title="重新开始">
+        <span class="ic" data-ic="reset" data-size="14"></span><span>重置</span>
+      </span>
+      <span class="mb-item" id="mbHelp">
+        <span class="ic" data-ic="help" data-size="14"></span><span>帮助</span>
+      </span>
       <span class="mb-clock" id="mbClock">--:--</span>
     </div>
   </header>
@@ -68,6 +79,7 @@
 <!-- 全局提示气泡 -->
 <div id="toast" class="toast"></div>
 
+<script src="js/icons.js"></script>
 <script src="js/data.js"></script>
 <script src="js/core.js"></script>
 <script src="js/apps.js"></script>

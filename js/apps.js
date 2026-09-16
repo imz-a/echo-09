@@ -282,19 +282,9 @@ Apps.drive = {
       if (f.type === 'img'){
         v.innerHTML =
           '<div class="sec-title">' + esc(f.name) + '</div>' +
-          '<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--ink-1)">' +
-            '<div style="height:220px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 60%,#2b2620,#141210)">' +
-              '<svg width="150" height="150" viewBox="0 0 120 120">' +
-                '<ellipse cx="60" cy="100" rx="34" ry="8" fill="rgba(0,0,0,.35)"/>' +
-                '<path d="M38 96 Q30 60 42 48 Q48 40 60 40 Q72 40 78 48 Q90 60 82 96 Z" fill="#dcd4c4"/>' +
-                '<path d="M40 46 L36 28 L54 38 Z" fill="#dcd4c4"/><path d="M80 46 L84 28 L66 38 Z" fill="#dcd4c4"/>' +
-                '<path d="M41 43 L39 33 L49 38 Z" fill="#c58a8a"/><path d="M79 43 L81 33 L71 38 Z" fill="#c58a8a"/>' +
-                '<circle cx="51" cy="56" r="4" fill="#332e26"/><circle cx="69" cy="56" r="4" fill="#332e26"/>' +
-                '<path d="M56 66 Q60 70 64 66" stroke="#332e26" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-                '<path d="M82 92 Q104 86 96 66" stroke="#dcd4c4" stroke-width="9" fill="none" stroke-linecap="round"/>' +
-              '</svg>' +
-            '</div>' +
-            '<div style="padding:12px 15px;font-size:12px;color:var(--txt-3);font-family:var(--mono)">' + esc(f.cap) + '</div>' +
+          '<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08)">' +
+            '<img src="assets/img/mochi.jpg" alt="MOCHI" style="display:block;width:100%;height:248px;object-fit:cover">' +
+            '<div style="padding:11px 15px;font-size:12px;color:var(--txt-3);font-family:var(--mono)">' + esc(f.cap) + '</div>' +
           '</div>';
       } else {
         const html = f.content.split('\n').map(l => {
@@ -323,8 +313,8 @@ Apps.blog = {
     const body = $('.win-body', w);
     body.className = 'win-body';
     if (params && params.post) return this.post(w, params.post);
-    body.innerHTML =
-      '<div class="bl-head">' +
+      body.innerHTML =
+      '<div class="bl-head has-cover">' +
         '<div class="bl-title">' + esc(BLOG.title) + '</div>' +
         '<div class="bl-sub">' + esc(BLOG.sub) + '</div>' +
       '</div>' +

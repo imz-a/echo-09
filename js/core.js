@@ -176,7 +176,7 @@ function openApp(id, params){
   w.innerHTML =
     '<div class="win-bar">' +
       '<div class="win-dots"><i class="r" data-act="close"></i><i class="y" data-act="min"></i><i class="g" data-act="max"></i></div>' +
-      '<div class="win-title">' + icon(meta.icon, 14) + '<span>' + esc(meta.name) + '</span></div>' +
+      '<div class="win-title">' + appIcon(meta.icon, 16) + '<span>' + esc(meta.name) + '</span></div>' +
     '</div>' +
     '<div class="win-body"></div>';
 
@@ -248,7 +248,7 @@ function buildDock(){
   d.innerHTML = list.map(a => {
     const isOpen = !!WM.open[a.id] && !WM.open[a.id].classList.contains('min');
     return '<div class="dock-btn ' + (isOpen ? 'active' : '') + '" data-app="' + a.id + '">' +
-             icon(a.icon, 22) + '<span class="tip">' + esc(a.name) + '</span>' +
+             appIcon(a.icon, 46) + '<span class="tip">' + esc(a.name) + '</span>' +
            '</div>';
   }).join('<div class="dock-sep"></div>');
   $$('.dock-btn', d).forEach(b => b.onclick = () => {
@@ -262,7 +262,7 @@ function buildIcons(){
   const box = $('#deskIcons');
   box.innerHTML = APPS.filter(a => S.unlocked.includes(a.id)).map(a =>
     '<div class="desk-icon" data-app="' + a.id + '">' +
-      '<div class="ico">' + icon(a.icon, 22) + '</div>' +
+      '<div class="ico">' + appIcon(a.icon, 42) + '</div>' +
       '<div class="lbl">' + esc(a.name) + '</div>' +
     '</div>').join('');
   $$('.desk-icon', box).forEach(el => el.onclick = () => openApp(el.dataset.app));

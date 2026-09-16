@@ -8,8 +8,8 @@ vc.on('jsdomError', e => errors.push('[jsdomError] ' + (e.detail || e).toString(
 vc.on('error', (...a) => errors.push('[console.error] ' + a.join(' ')));
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-let fail = 0;
-const check = (cond, name) => { console.log((cond ? '  ✔ ' : '  ✖ ') + name); if (!cond) fail++; };
+let fail = 0, _n = 0; const _fails = [];
+const check = (cond, name) => { _n++; console.log((cond ? '  ✔ ' : '  ✖ ') + name); if (!cond){ fail++; _fails.push('#' + _n + ' ' + name); } };
 const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t < (ms || 8000)){ if (fn()) return true; await sleep(120); } return false; };
 
 (async () => {
@@ -141,13 +141,24 @@ const waitFor = async (fn, ms) => { const t = Date.now(); while (Date.now() - t 
   check(!emo, '界面文本无 emoji 残留' + (emo ? '：' + Array.from(new Set(emo)).join(' ') : ''));
   const css = Array.from(doc.styleSheets).map(s => { try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(e){ return ''; } }).join('\n');
   check(!/background-clip\s*:\s*text|-webkit-background-clip/.test(css), '已移除渐变裁剪文字');
-  check(/var\(--acc\)/.test(css) && /#d8a34a/.test(css), '暖墨 / 黄铜配色变量生效');
+  check(/--blue\s*:\s*#0a6cff/.test(css) && /wallpaper\.jpg/.test(css), '拟真系统蓝色配色 + 照片壁纸生效');
+  check(/blog-cover\.jpg/.test(css), '博客封面照片接入样式');
+  check(/linear-gradient\(180deg,#54a9ff/.test(css) || /app-tile/.test(css), '彩色应用图标（Aqua 瓷砖）生效');
+
+  console.log('\n[9b] 真实图片接入（用户要求"搜图放进去"）');
+  ev('openApp("drive")'); await sleep(250);
+  const f4 = QA('.app-drive .dr-file').find(el => el.dataset.f === 'f4');
+  if (f4){ click(f4); await sleep(300); }
+  check(!!Q('.app-drive img[src*="mochi.jpg"]'), '网盘 mochi.jpg 真实猫图已渲染（替换原 SVG 占位）');
+  ev('Apps.blog.render(WM.open["blog"])'); await sleep(250);
+  check(!!Q('.app-blog .bl-head.has-cover'), '博客首页头部使用 has-cover（真实封面照片）');
 
   console.log('\n[10] 运行时错误');
   const real = errors.filter(e => !/Could not parse CSS|Not implemented|AudioContext|css/i.test(e));
   real.slice(0, 8).forEach(e => console.log('  ✖ ' + e));
   check(real.length === 0, '无 JS 运行时错误' + (errors.length > real.length ? '（忽略 ' + (errors.length - real.length) + ' 条 jsdom 环境噪音）' : ''));
 
+  if (_fails.length) require('fs').writeFileSync(__dirname + '/_smoke_fail.txt', _fails.map(f => 'FAIL ' + f).join('\n'), 'utf8');
   dom.window.close();
   console.log('\n' + (fail ? '❌ 失败 ' + fail + ' 项' : '✅ 冒烟测试全部通过'));
   process.exit(fail ? 1 : 0);

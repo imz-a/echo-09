@@ -79,3 +79,28 @@ function hydrateIcons(root){
     el.dataset.done = '1';
   });
 }
+
+/* ============================================================
+   应用图标（拟真）：圆角方块底 + 白色符号 + 顶部高光，
+   让 Dock / 桌面看起来像一台真电脑上的应用，而不是抽象线条。
+   ============================================================ */
+const TILES = {
+  search:   { bg:'linear-gradient(180deg,#54a9ff,#1668e0)', fg:'#fff' },
+  forum:    { bg:'linear-gradient(180deg,#8b95ff,#4c58e6)', fg:'#fff' },
+  cloud:    { bg:'linear-gradient(180deg,#5ec6ff,#1d8fe6)', fg:'#fff' },
+  mail:     { bg:'linear-gradient(180deg,#57d2c4,#129fae)', fg:'#fff' },
+  mailOpen: { bg:'linear-gradient(180deg,#57d2c4,#129fae)', fg:'#fff' },
+  database: { bg:'linear-gradient(180deg,#66788c,#2e3b49)', fg:'#cfe4ff' },
+  terminal: { bg:'linear-gradient(180deg,#4d4d55,#1f1f26)', fg:'#7ef0b0' },
+  pin:      { bg:'linear-gradient(180deg,#ffd75e,#efa21e)', fg:'#6b3d00' },
+  moon:     { bg:'linear-gradient(180deg,#b394ff,#7549de)', fg:'#fff' },
+  ripple:   { bg:'linear-gradient(180deg,#41546a,#1a2531)', fg:'#8fd8ff' }
+};
+
+function appIcon(name, size){
+  const t = TILES[name] || { bg:'linear-gradient(180deg,#9aa2ad,#6a7280)', fg:'#fff' };
+  const s = size || 44;
+  const r = Math.round(s * .235);
+  return '<span class="app-tile" style="width:' + s + 'px;height:' + s + 'px;border-radius:' + r + 'px;' +
+         'background:' + t.bg + ';color:' + t.fg + '">' + icon(name, Math.round(s * .54)) + '</span>';
+}

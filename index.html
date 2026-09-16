@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>回声档案 ECHO-09 · 网页解密游戏</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ 开机引导层 ============ -->
+<div id="boot" class="boot">
+  <div class="boot-inner">
+    <pre class="boot-logo">
+   ______     __  __     ______     __  __     ___     ____
+  /\  ___\   /\ \_\ \   /\  ___\   /\ \/ /    /\__\   /\  _`\
+  \ \  __\   \ \  __ \  \ \ \____  \ \  _'-.  \/_/\_\ \ \ \L\ \
+   \ \_____\  \ \_\ \_\  \ \_____\  \ \_\ \_\   /\____\ \ \ ,__/
+    \/_____/   \/_/\/_/   \/_____/   \/_/\/_/   \/____/  \ \ \/
+                                                          \ \_\
+                                                           \/_/</pre>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-bar"><div class="boot-bar-fill" id="bootBar"></div></div>
+    <div class="boot-cta" id="bootCta">按任意键进入 &nbsp;<span class="blink">_</span></div>
+  </div>
+  <div class="scanlines"></div>
+</div>
+
+<!-- ============ 桌面 ============ -->
+<div id="desktop" class="desktop hidden">
+  <div class="wallpaper"></div>
+  <div class="wall-grid"></div>
+  <div class="wall-glow"></div>
+  <div class="noise"></div>
+
+  <!-- 顶部状态栏 -->
+  <header class="menubar">
+    <div class="mb-left">
+      <span class="mb-logo">◈</span>
+      <span class="mb-item">档案终端</span>
+      <span class="mb-item">调查模式</span>
+      <span class="mb-item" id="mbClue">线索 0/0</span>
+    </div>
+    <div class="mb-right">
+      <span class="mb-item" id="mbSound" title="开关音效">♪ 音效</span>
+      <span class="mb-item" id="mbSave" title="保存进度">⤓ 存档</span>
+      <span class="mb-item" id="mbReset" title="重新开始">↺ 重置</span>
+      <span class="mb-item" id="mbHelp">? 帮助</span>
+      <span class="mb-clock" id="mbClock">--:--</span>
+    </div>
+  </header>
+
+  <!-- 桌面图标 -->
+  <div class="desk-icons" id="deskIcons"></div>
+
+  <!-- 窗口层 -->
+  <div class="windows" id="windows"></div>
+
+  <!-- Dock -->
+  <div class="dock" id="dock"></div>
+</div>
+
+<!-- ============ 通用弹层 ============ -->
+<div id="modal" class="modal hidden">
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<!-- 全局提示气泡 -->
+<div id="toast" class="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/core.js"></script>
+<script src="js/apps.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # ECHO-09 · 回声档案
 
+![ECHO-09 · 回声档案 封面](assets/img/cover.jpg)
+
 > 一个纯前端的**网页解密游戏（WIG, Web Interactive Game）**。你扮演一名档案调查员，在一台「2011 年的旧电脑」里，用搜索引擎、论坛、网盘、邮箱、企业内网和终端，拼出一个失踪者的真相。
 
 **在线试玩：** https://imz-a.github.io/echo-09/
@@ -46,7 +48,7 @@ js/data.js          全部内容数据（剧情 / 密码 / 线索）
 js/core.js          状态、存档、窗口管理、音效（WebAudio 实时合成，无音频文件）
 js/apps.js          各站点渲染器
 js/main.js          开机引导序列
-assets/img/         真实照片（壁纸 / 博客封面 / 猫）
+assets/img/         真实照片（壁纸 / 博客封面 / 猫）+ 作品封面（cover.jpg / cover-social.jpg）
 tests/              自测与审计脚本（不属于游戏本体，部署时已排除）
 ```
 

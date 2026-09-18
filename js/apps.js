@@ -243,7 +243,7 @@ Apps.drive = {
     $('#drGo', w).onclick = () => {
       const v = (inp.value || '').trim();
       if (v === DRIVE.code){
-        S.solved.drive = true; save(); sfx.ok();
+        S.solved.drive = true; save(); refreshLive(); sfx.ok();
         toast('提取码正确，文件已解锁', 'good', 'check');
         addClue('c_code');
         this.render(w);
@@ -375,7 +375,7 @@ Apps.mail = {
       const u = ($('#mlU', w).value || '').trim().toLowerCase();
       const p = ($('#mlP', w).value || '').trim().toLowerCase();
       if ((u === 'moby@stardust.net' || u === 'moby' || u === 'sd-0417') && p === MAIL.pass){
-        S.solved.mail = true; save(); sfx.ok();
+        S.solved.mail = true; save(); refreshLive(); sfx.ok();
         toast('登录成功：' + MAIL.user, 'good', 'check');
         this.render(w);
       } else {
@@ -457,7 +457,7 @@ Apps.db = {
       const u = ($('#dbU', w).value || '').trim().toLowerCase();
       const p = ($('#dbP', w).value || '').trim().toLowerCase();
       if ((u === 'sd-0417' || u === '0417' || u === 'sd0417') && p === DB_SITE.pass){
-        S.solved.db = true; save(); sfx.ok();
+        S.solved.db = true; save(); refreshLive(); sfx.ok();
         toast('内网身份验证通过 · SD-0417', 'good', 'check');
         this.render(w);
       } else {
@@ -671,26 +671,63 @@ const DIRECT = {
   decode: '在终端执行：decode djrmusm  →  shenyan',
   db:     '内网账号：工号 SD-0417，口令 shenyan',
   key:    '密钥 = 741 + 928 = 741928',
-  echo:   '在终端执行：echo 741928'
+  keyA:   '云雀网盘 → voice_sample_0817.log → SEG-B = 928；密钥 = 741928',
+  keyB:   '内网 → ECHO 项目日志 → SEG-A = 741；密钥 = 741928',
+  echo:   '在终端执行：echo 741928',
+  done:   '顶栏「重置」重开一局，在最后一步选另一个结局'
 };
 
 function currentStage(){
+  // 按「当前真正卡在哪一步」推算阶段；每个分支都会跳过玩家已经完成的事，
+  // 这样线索板上的提示永远不会停留在已经拿到的信息上。
   if (!S.unlocked.includes('forum') && !S.unlocked.includes('blog')) return 'start';
-  if (!S.solved.drive) return (S.clues.includes('c_drive') || S.clues.includes('c_code')) ? 'code' : 'forum';
+
+  if (!S.solved.drive)
+    return (S.clues.includes('c_drive') || S.clues.includes('c_code')) ? 'code' : 'forum';
+
   if (!S.flags.readme) return 'readme';
-  if (!S.solved.mail) return S.clues.includes('c_mochi') || S.clues.includes('c_mochi2') ? 'cat' : 'readme';
-  if (!S.solved.db) return S.clues.includes('c_pass') ? 'decode' : 'mail';
-  if (!S.end) return (S.flags.segA && S.flags.segB) ? 'echo' : 'key';
-  return 'echo';
+
+  if (!S.solved.mail){
+    const knowsCat = S.clues.includes('c_mochi') || S.clues.includes('c_mochi2') || S.clues.includes('c_cat');
+    return knowsCat ? 'cat' : 'readme';
+  }
+
+  if (!S.solved.db){
+    // 已经 decode 出 shenyan 了，就不该再提示去 decode
+    if (S.flags.decodeTried) return 'db';
+    return S.clues.includes('c_pass') ? 'decode' : 'mail';
+  }
+
+  if (S.end) return 'done';
+
+  // 已进内网：看密钥两半各拿到了没
+  if (S.flags.segA && S.flags.segB) return 'echo';
+  if (S.flags.segA) return 'keyB';   // 有前半段，缺样本那一半
+  if (S.flags.segB) return 'keyA';   // 有后半段，缺项目那一半
+  return 'key';
+}
+
+/* 上次渲染时的阶段：用来判断提示是不是「换了新的一条」 */
+let _lastNoteStage = null;
+
+function hintText(stage, level){
+  const h = HINTS.find(x => x.need === stage) || HINTS[HINTS.length - 1];
+  return level === 2 ? (DIRECT[stage] || h.t) : h.t;
 }
 
 Apps.notes = {
   render(w){
     const body = $('.win-body', w);
     body.className = 'win-body';
+    // 重渲染时保住阅读位置
+    const prevPane = $('.nt-body', body);
+    const keepScroll = prevPane ? prevPane.scrollTop : 0;
     const pct = Math.round(S.clues.length / TOTAL_CLUES * 100);
     const stage = currentStage();
     const hint = HINTS.find(h => h.need === stage) || HINTS[HINTS.length - 1];
+    // 玩家之前点过提示，这次阶段又往前走了 → 自动换成新阶段的提示
+    const autoShow = (S.hintLevel || 0) > 0 && stage !== 'done';
+    const changed  = autoShow && _lastNoteStage !== null && _lastNoteStage !== stage;
 
     body.innerHTML =
       '<div class="nt-head">' +
@@ -711,21 +748,39 @@ Apps.notes = {
         '<div class="nt-hints">' +
           '<h4>卡住了？</h4>' +
           '<div class="nt-hint-lv">' +
-            '<button class="btn sm" id="h1">给点提示（委婉）</button>' +
-            '<button class="btn sm" id="h2">直接告诉我答案</button>' +
+            '<button class="btn sm' + (S.hintLevel === 1 ? ' primary' : '') + '" id="h1">给点提示（委婉）</button>' +
+            '<button class="btn sm' + (S.hintLevel === 2 ? ' primary' : '') + '" id="h2">直接告诉我答案</button>' +
+            (S.hintLevel ? '<button class="btn sm ghost" id="h0">不用提示了</button>' : '') +
           '</div>' +
-          '<div id="hintOut"></div>' +
+          '<div id="hintOut">' + (autoShow ? this._box(stage, S.hintLevel, changed) : '') + '</div>' +
+          (autoShow ? '<div class="nt-hint-auto">' + (changed ? '进度有更新，提示已自动换成下一条' : '提示会随进度自动更新') + '</div>' : '') +
         '</div>' +
       '</div>';
 
+    // 滚回原位（重渲染不该把人弹回顶部）
+    const pane = $('.nt-body', body);
+    if (pane) pane.scrollTop = keepScroll;
+
+    _lastNoteStage = stage;
+
     const show = (level) => {
+      S.hintLevel = level;
       S.hints++; save();
-      const txt = level === 2 ? (DIRECT[stage] || hint.t) : hint.t;
-      $('#hintOut', body).innerHTML = '<div class="nt-hint-box">' + (level === 2 ? icon('key',14) : icon('bulb',14)) + '<span>' + esc(txt) + '</span></div>';
+      $('#hintOut', body).innerHTML = this._box(stage, level, false);
+      $('.nt-hint-auto', body) && ($('.nt-hint-auto', body).innerHTML = '提示会随进度自动更新');
       sfx.click();
+      this.render(w);   // 重画一次，让按钮高亮跟着变
     };
     $('#h1', body).onclick = () => show(1);
     $('#h2', body).onclick = () => show(2);
+    const h0 = $('#h0', body);
+    if (h0) h0.onclick = () => { S.hintLevel = 0; save(); $('#hintOut', body).innerHTML = ''; this.render(w); sfx.click(); };
+  },
+
+  _box(stage, level, flash){
+    const txt = hintText(stage, level);
+    return '<div class="nt-hint-box' + (flash ? ' flash' : '') + '">' +
+      (level === 2 ? icon('key',14) : icon('bulb',14)) + '<span>' + esc(txt) + '</span></div>';
   }
 };
 
@@ -766,7 +821,7 @@ const Ending = {
   },
   finish(id){
     const e = ENDING[id];
-    S.end = id; save();
+    S.end = id; save(); refreshLive();
     if (S.hints === 0) grantAch('no_hint');
     if (Date.now() - S.start < 2 * 3600 * 1000) grantAch('speed');
 

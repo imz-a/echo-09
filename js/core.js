@@ -44,6 +44,7 @@ const defaultState = () => ({
   solved: { drive:false, mail:false, db:false },
   flags:  {},
   hints:  0,
+  hintLevel: 0,   // 0=没问过 1=委婉 2=直答（线索板记住玩家选的层级，进度变了自动换新提示）
   ach:    [],
   start:  Date.now(),
   end:    null,
@@ -73,6 +74,19 @@ function resetSave(){
 }
 
 /* ---------------- 领域动作 ---------------- */
+
+/* 只刷新「可以安全重画」的窗口（目前是线索板）。
+   搜索框、终端这类有输入状态的窗口不在这里刷，否则会清掉玩家正在打的字。 */
+const LIVE_VIEWS = ['notes'];
+function refreshLive(){
+  for (const id of LIVE_VIEWS){
+    const w = WM.open[id];
+    if (w && typeof Apps !== 'undefined' && Apps[id] && Apps[id].render) {
+      try { Apps[id].render(w); } catch(e){ /* 刷新失败不影响主流程 */ }
+    }
+  }
+}
+
 function addClue(id){
   if (!CLUES[id] || S.clues.includes(id)) return false;
   S.clues.push(id);
@@ -82,6 +96,7 @@ function addClue(id){
   renderMenubar();
   if (S.clues.length >= TOTAL_CLUES) grantAch('all_clues');
   save();
+  refreshLive();
   return true;
 }
 
@@ -92,6 +107,7 @@ function unlockApp(id){
   toast((a ? a.name : id) + ' 已收录', 'good', 'cloud');
   buildDock(); buildIcons();
   save();
+  refreshLive();
   return true;
 }
 
@@ -103,7 +119,7 @@ function grantAch(id){
   save();
 }
 
-function setFlag(k, v){ S.flags[k] = v === undefined ? true : v; save(); }
+function setFlag(k, v){ S.flags[k] = v === undefined ? true : v; save(); refreshLive(); }
 const hasFlag = k => !!S.flags[k];
 
 /* ---------------- 音效（WebAudio 合成，无外部资源） ---------------- */
